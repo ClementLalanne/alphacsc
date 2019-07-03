@@ -12,6 +12,28 @@ import numpy as np
 from .. import cython_code
 from .lil import get_z_shape, is_lil
 
+def construct_X_trend(z, ds, trend):
+    """
+    Parameters
+    ----------
+    z : array, shape (n_atoms, n_trials, n_times_valid)
+        The activations
+    ds : array, shape (n_atoms, n_times_atom)
+        The atoms
+
+    Returns
+    -------
+    X : array, shape (n_trials, n_times)
+    """
+    assert z.shape[0] == ds.shape[0]
+    n_atoms, n_trials, n_times_valid = z.shape
+    n_atoms, n_times_atom = ds.shape
+    n_times = n_times_valid + n_times_atom - 1
+
+    X = np.zeros((n_trials, n_times))
+    for i in range(n_trials):
+        X[i] = _choose_convolve(z[:, i], ds)
+    return X+trend
 
 def construct_X(z, ds):
     """

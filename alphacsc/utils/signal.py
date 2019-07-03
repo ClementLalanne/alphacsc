@@ -14,36 +14,22 @@ def next_power2(num):
 
 
 def split_signal(X, n_splits=1, apply_window=True):
-    """Split the signal in ``n_splits`` chunks for faster training.
-
-    This function can be used to accelerate the dictionary learning algorithm
-    by creating independent chunks that can be processed in parallel. This can
-    bias the estimation and can create border artifacts so the number of chunks
-    should be kept as small as possible (`e.g.` equal to ``n_jobs``).
-
-    Also, it is advised to not use the result of this function to
-    call the ``DictionaryLearning.transform`` method, as it would return an
-    approximate reduction of the original signal in the sparse basis.
-
-    Note that this is a lossy operation, as all chunks will have length
-    ``n_times // n_splits`` and the last ``n_times % n_splits`` samples are
-    discarded.
+    """Split the signal in n_splits chunks for faster training.
 
     Parameters
     ----------
     X : ndarray, shape (n_channels, n_times)
-        Signal to be split. It should be a single signal.
+        Signal to split. It should be only one signal.
     n_splits : int (default: 1)
-        Number of splits to create from the original signal. Default is 1.
+        Number of splits
     apply_window : bool (default: True)
-        If set to True (default), a tukey window is applied to each split to
-        reduce the border artifacts by reducing the weights of the chunk
-        borders.
+        If set to True, a tukey window is applied to each split to
+        reduce the border artifacts.
 
     Return
     ------
     X_split: ndarray, shape (n_splits, n_channels, n_times // n_splits)
-        The signal splitted in ``n_splits``.
+        The signal splitted in n_splits.
     """
     assert X.ndim == 2, (
         "This splitting utility is only designed for one multivariate "
